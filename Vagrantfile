@@ -12,6 +12,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.box = 'trusty-server-cloudimg-amd64-vagrant-disk1'
 
+  config.vm.box_url = 'https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box'
+
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
   # `vagrant box outdated`. This is not recommended.
@@ -46,8 +48,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Example for VirtualBox:
   #
   config.vm.provider 'virtualbox' do |vb|
-    vb.customize %W(createhd --filename storage-disk-default-1 --size 8000)
-    vb.customize ['storageattach', :id, '--storagectl', 'SATAController', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', 'storage-disk-default-1.vdi']
+    vb.customize %W(createhd --filename disk-default-1 --size 8000)
+    vb.customize ['storageattach', :id, '--storagectl', 'SATAController', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', 'disk-default-1.vdi']
+    vb.customize ['modifyvm', :id, '--memory', '192']
   end
 
   # View the documentation for the provider you're using for more
