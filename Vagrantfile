@@ -45,14 +45,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
   #
-  # config.vm.provider "virtualbox" do |vb|
-  #   # Don't boot with headless mode
-  #   vb.gui = true
-  #
-  #   # Use VBoxManage to customize the VM. For example to change memory:
-  #   vb.customize ["modifyvm", :id, "--memory", "1024"]
-  # end
-  #
+  config.vm.provider 'virtualbox' do |vb|
+    vb.customize %W(createhd --filename storage-disk-default-1 --size 8000)
+    vb.customize ['storageattach', :id, '--storagectl', 'SATAController', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', 'storage-disk-default-1.vdi']
+  end
+
   # View the documentation for the provider you're using for more
   # information on available options.
 
