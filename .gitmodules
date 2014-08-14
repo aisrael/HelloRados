@@ -4,3 +4,6 @@
 [submodule "ceph"]
 	path = ceph
 	url = git@github.com:aisrael/ceph.git
+[submodule "compat/pthread4w"]
+	path = compat/pthread4w
+	url = git://git.code.sf.net/p/pthreads4w/code
