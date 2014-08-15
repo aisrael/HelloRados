@@ -48,9 +48,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Example for VirtualBox:
   #
   config.vm.provider 'virtualbox' do |vb|
-    vb.customize %W(createhd --filename disk-default-1 --size 8000)
-    vb.customize ['storageattach', :id, '--storagectl', 'SATAController', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', 'disk-default-1.vdi']
-    vb.customize ['modifyvm', :id, '--memory', '192']
+
+    vb.customize ['modifyvm', :id, '--memory', '512']
+
+    3.times do |i|
+      vb.customize %W(createhd --filename disk-default-#{i} --size 1000)
+      vb.customize ['storageattach', :id, '--storagectl', 'SATAController', '--port', 3 + i, '--device', 0, '--type', 'hdd', '--medium', "disk-default-#{i}.vdi"]
+    end
+
   end
 
   # View the documentation for the provider you're using for more
