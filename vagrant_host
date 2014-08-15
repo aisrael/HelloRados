@@ -24,9 +24,17 @@ raw_multi_journal=False
 #journal_size: 100
 #pool_default_pg_num: 128
 #pool_default_pgp_num: 128
+
+# Needed for single node
+common_single_host_mode=True
+
+# Change to > 1 if you have more than one OSD
 pool_default_size=1
+
+# Has to reflect the same IP block in Vagrantfile
 cluster_network=192.168.73.0/24
 public_network=192.168.73.0/24
+
 #osd_mkfs_type: xfs
 #osd_mon_heartbeat_interval: 30
 # Performance tuning
