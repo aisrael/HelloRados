@@ -49,4 +49,37 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   end
 
+  config.vm.provision 'ansible' do |ansible|
+    ansible.playbook = 'ceph-ansible/site.yml'
+    # Note: Can't do ranges like mon[0-2] in groups because
+    # these aren't supported by Vagrant, see
+    # https://github.com/mitchellh/vagrant/issues/3539
+    ansible.groups = {
+      'mons' => %w(default),
+      'osds' => %w(default),
+      'mdss' => [],
+      'rgws' => []
+    }
+
+    # In a production deployment, these should be secret
+    ansible.extra_vars = {
+      fsid: '4a158d27-f750-41d5-9e7f-26ce4c9d2d45',
+      monitor_secret: 'AQAWqilTCDh7CBAAawXt6kyTgLFCxSvJhTEmuw==',
+      radosgw: 'false',
+      mds: 'false',
+
+      # Needed for single node
+      common_single_host_mode: 'True',
+
+      # Change to > 1 if you have more than one OSD
+      pool_default_size: 1,
+
+      # Has to reflect the same IP block in Vagrantfile
+      cluster_network: '192.168.73.0/24',
+      public_network: '192.168.73.0/24'
+    }
+
+    ansible.limit = 'all'
+  end
+
 end
