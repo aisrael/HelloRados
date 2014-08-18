@@ -7,3 +7,6 @@
 [submodule "compat/pthread4w"]
 	path = compat/pthread4w
 	url = git://git.code.sf.net/p/pthreads4w/code
+[submodule "compat/libatomic_ops"]
+	path = compat/libatomic_ops
+	url = https://github.com/ivmai/libatomic_ops.git
