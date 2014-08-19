@@ -10,3 +10,6 @@
 [submodule "compat/libatomic_ops"]
 	path = compat/libatomic_ops
 	url = https://github.com/ivmai/libatomic_ops.git
+[submodule "compat/poco"]
+	path = compat/poco
+	url = https://github.com/pocoproject/poco.git
