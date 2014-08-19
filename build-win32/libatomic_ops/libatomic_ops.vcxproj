@@ -58,6 +58,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>AO_ASSUME_WINDOWS98;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\compat\libatomic_ops\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ProgramDataBaseFileName>$(ProjectName)</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
