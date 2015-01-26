@@ -3,7 +3,7 @@
 	url = https://github.com/ceph/ceph-ansible.git
 [submodule "ceph"]
 	path = ceph
-	url = git@github.com:aisrael/ceph.git
+url=git@github.com:ceph/ceph.git
 [submodule "compat/pthread4w"]
 	path = compat/pthread4w
 	url = git://git.code.sf.net/p/pthreads4w/code
