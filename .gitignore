@@ -23,3 +23,5 @@
 *.app
 .vagrant_host.swp
 *.vdi
+
+/etc/ceph/
