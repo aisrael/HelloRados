@@ -12,12 +12,13 @@ Vagrant.configure(2) do |config|
 
   VM_IP = 200
   VM_NAME = "ceph#{VM_IP}"
+  SUBNET='192.168.73'
 
   config.vm.hostname = VM_NAME
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
-  config.vm.network 'private_network', ip: "192.168.73.#{VM_IP}"
+  config.vm.network 'private_network', ip: "#{SUBNET}.#{VM_IP}"
 
   # Add a 1 GB drive to the VM to act as OSD drive
   config.vm.provider 'virtualbox' do |vbox|
@@ -46,6 +47,8 @@ Vagrant.configure(2) do |config|
 
     # In a production deployment, these should be secret
     ansible.extra_vars = {
+      cephx: false, # disable cephx authentication
+
       ceph_dev: true, # use ceph development branch
       ceph_dev_branch: 'v0.92', # development branch you would like to use e.g: master, wip-hack
 
@@ -61,12 +64,14 @@ Vagrant.configure(2) do |config|
       pool_default_size: 1,
 
       # Has to reflect the same IP block in Vagrantfile
-      cluster_network: '192.168.73.0/24',
-      public_network: '192.168.73.0/24'
+      cluster_network: "#{SUBNET}.0/24",
+      public_network: "#{SUBNET}.0/24"
     }
 
     ansible.limit = 'all'
   end
+
+  config.vm.provision 'shell', inline: 'sudo cp -r /etc/ceph /vagrant/etc/'
 
   # If true, then any SSH connections made will enable agent forwarding.
   # Default value: false
