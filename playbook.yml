@@ -1,0 +1,7 @@
+---
+# 
+
+- hosts: default
+  sudo: true
+  tasks:
+  - ceph_osd_pool: state=present name=data pgnum=128 pgpnum=128

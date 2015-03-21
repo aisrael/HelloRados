@@ -71,7 +71,15 @@ Vagrant.configure(2) do |config|
     ansible.limit = 'all'
   end
 
-  config.vm.provision 'shell', inline: 'sudo cp -r /etc/ceph /vagrant/etc/'
+  config.vm.provision 'ansible' do |ansible|
+    ansible.playbook = 'playbook.yml'
+  end
+
+  # Workaround for "stdin is not a tty", see https://github.com/mitchellh/vagrant/issues/1673
+  config.vm.provision 'shell', inline: <<-SHELL
+    sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile
+    sudo cp -r /etc/ceph /vagrant/etc/
+  SHELL
 
   # If true, then any SSH connections made will enable agent forwarding.
   # Default value: false
