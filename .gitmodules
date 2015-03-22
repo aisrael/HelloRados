@@ -13,3 +13,7 @@
 [submodule "compat/poco"]
 	path = compat/poco
 	url = https://github.com/pocoproject/poco.git
+[submodule "library"]
+	path = library
+	url = git@github.com:aisrael/ansible-modules-extras.git
+	branch = wip-ceph
