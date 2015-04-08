@@ -15,5 +15,5 @@
 	url = https://github.com/pocoproject/poco.git
 [submodule "library"]
 	path = library
-	url = git@github.com:aisrael/ansible-modules-extras.git
+	url=git@github.com:AcalephStorage/ansible-modules-extras.git
 	branch = wip-ceph
