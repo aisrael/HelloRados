@@ -1,6 +1,6 @@
 [submodule "ceph-ansible"]
 	path = ceph-ansible
-	url = https://github.com/ceph/ceph-ansible.git
+	url = https://github.com/aisrael/ceph-ansible.git
 [submodule "ceph"]
 	path = ceph
 	url = git@github.com:aisrael/ceph.git
