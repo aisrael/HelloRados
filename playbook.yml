@@ -1,7 +1,81 @@
 ---
-# 
-
 - hosts: default
   sudo: true
   tasks:
-  - ceph_osd_pool: state=present name=data pgnum=128 pgpnum=128
+  # Workaround for "stdin is not a tty", see https://github.com/mitchellh/vagrant/issues/1673
+  - lineinfile: dest=/root/.profile regexp='^mesg n$' line='tty -s && mesg n'
+    sudo: yes
+  - apt: pkg=linux-image-extra-{{ ansible_kernel }} state=present update_cache=yes cache_valid_time=3600
+    sudo: yes
+  - name: Install required packages
+    apt: pkg={{item}}
+    with_items:
+      - build-essential
+      - autotools-dev
+      - autoconf
+      - automake
+      - cdbs
+      - gcc
+      - g++
+      - git
+      - libboost-dev
+      - libedit-dev
+      - libssl-dev
+      - libtool
+      - libfcgi
+      - libfcgi-dev
+      - libfuse-dev
+      - linux-kernel-headers
+      - libcrypto++-dev
+      - libexpat1-dev
+      - pkg-config
+      - libcurl4-gnutls-dev
+      - uuid-dev
+      - libkeyutils-dev
+      - libgoogle-perftools-dev
+      - libatomic-ops-dev
+      - libaio-dev
+      - libgdata-common
+      - libgdata13
+      - libsnappy-dev
+      - libleveldb-dev
+      - libblkid-dev
+      - xfslibs-dev
+      - libboost-thread-dev
+      - libboost-program-options-dev
+      - libudev-dev
+      - libcrypto++-doc
+      - libcrypto++-utils
+      - ruby-dev
+    sudo: yes
+  - ceph_osd_pool: state=present name=data pgnum=32
+  - ceph_osd_pool: state=present name=pool0 pgnum=32 pgpnum=32 ruleset=replicated_ruleset
+    register: add_result
+  - debug: var=add_result
+  - ceph_osd_pool: state=absent name=pool0
+    register: delete_result
+  - debug: var=delete_result
+  - ceph: cmd=status
+    register: status
+  - debug: var=status
+  - ceph: cmd=quorum_status
+    register: quorum_status
+  - debug: var=quorum_status
+  - ceph_rbd: name=rbd1 state=present size=32 image_format=2 image_shared=true
+    register: rbd_create
+  - debug: var=rbd_create
+  - ceph_rbd: name=rbd1 state=present size=64
+    register: rbd_resize
+  - debug: var=rbd_resize
+  - ceph_rbd_map: name=rbd1 read_only=true
+    register: ceph_rbd_map
+  - debug: var=ceph_rbd_map
+  - ceph_rbd_map: name=rbd1 state=absent
+    register: ceph_rbd_unmap
+  - debug: var=ceph_rbd_unmap
+  - ceph_rbd: name=rbd1 state=present size=32 allow_shrink=true
+    register: rbd_shrink
+  - debug: var=rbd_shrink
+  - ceph_rbd: name=rbd1 state=absent
+    register: rbd_rm
+  - debug: var=rbd_rm

@@ -24,11 +24,11 @@ Vagrant.configure(2) do |config|
   config.vm.provider 'virtualbox' do |vbox|
 
     vbox.name = VM_NAME
-    vbox.customize ['modifyvm', :id, '--memory', '512']
+    vbox.memory = 1024
 
     1.times do |i|
-      vbox.customize %W(createhd --filename disk-default-#{i} --size 1000)
-      vbox.customize ['storageattach', :id, '--storagectl', 'SATAController', '--port', 3 + i, '--device', 0, '--type', 'hdd', '--medium', "disk-default-#{i}.vdi"]
+      vbox.customize %W(createhd --filename osd-#{i} --size 1000)
+      vbox.customize ['storageattach', :id, '--storagectl', 'SATAController', '--port', 3 + i, '--device', 0, '--type', 'hdd', '--medium', "osd-#{i}.vdi"]
     end
 
   end
@@ -47,10 +47,20 @@ Vagrant.configure(2) do |config|
 
     # In a production deployment, these should be secret
     ansible.extra_vars = {
-      cephx: false, # disable cephx authentication
+      # cephx: false, # disable cephx authentication
+
+      # ceph_stable: true, # use ceph stable branch
+      # ceph_stable_release: 'hammer', # ceph stable release
 
       ceph_dev: true, # use ceph development branch
-      ceph_dev_branch: 'v0.92', # development branch you would like to use e.g: master, wip-hack
+      ceph_dev_branch: 'hammer', # development branch you would like to use e.g: master, wip-hack
+
+      restapi: false, # disable restapi configuration in ceph.conf
+
+      cephx_require_signatures: false,
+
+      pool_default_pg_num: 32,
+      pool_default_pgp_num: 32,
 
       fsid: '4a158d27-f750-41d5-9e7f-26ce4c9d2d45',
       monitor_secret: 'AQAWqilTCDh7CBAAawXt6kyTgLFCxSvJhTEmuw==',
@@ -75,9 +85,7 @@ Vagrant.configure(2) do |config|
     ansible.playbook = 'playbook.yml'
   end
 
-  # Workaround for "stdin is not a tty", see https://github.com/mitchellh/vagrant/issues/1673
   config.vm.provision 'shell', inline: <<-SHELL
-    sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile
     sudo cp -r /etc/ceph /vagrant/etc/
   SHELL
 
